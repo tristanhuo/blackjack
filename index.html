@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Welcome to Vegas!</title>
+        <style>
+            body {
+                background-color:rgb(0, 46, 0);
+            }
+            .card {
+                border: thick solid black;
+                background-color: rgb(255, 254, 181);
+                border-radius: 16px;
+                height:200px;
+                width:140px;
+                margin-bottom: 16px;
+                display: grid;
+                align-items: center;
+                justify-items: center;
+            }
+            .card-area {
+                display: grid;
+                grid-template-columns: repeat(3, 160px);
+                font-family: Tahoma;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .game-area {
+                display:grid;
+                grid-template-columns: repeat(2, 1fr);
+                border-radius: 20px;
+                border: thin solid white;
+                background-color:rgb(0, 75, 0)
+            }
+            .title {
+                color:yellowgreen;
+                font-size: 40px;
+                font-family: Tahoma;
+                padding-left:25px;
+                padding-bottom:10px;
+            }
+            .button {
+                background-color: rgb(255, 75, 75);
+                color:rgb(255, 254, 181);
+                padding:10px;
+                border-radius: 10px;
+                border:thin solid rgb(255, 254, 181);
+                display: grid;
+                width: 100px;
+                text-align: center;
+                cursor: pointer;
+            }
+
+            .bet-area {
+                display: grid;
+                grid-template-columns: 140px 140px 140px 1fr 1fr;
+                padding-top: 10px;
+            }
+
+            .hit-area {
+                display: grid;
+                grid-template-columns: 140px 140px;
+                padding-top: 20px;
+                padding-left: 20px;
+            }
+
+            .hit-button {
+                background-color: rgb(83, 21, 75);
+                color:rgb(255, 254, 181);
+                padding:10px;
+                border-radius: 10px;
+                border:thin solid rgb(255, 254, 181);
+                display: grid;
+                width: 100px;
+                text-align: center;
+                cursor: pointer;
+                font-family: Tahoma;
+            }
+
+            .chips-text {
+                color:rgb(255, 75, 75);
+                font-family: Tahoma;
+                font-size: 30px;
+                vertical-align: middle;
+                padding-left: 150px;
+            }
+
+            .bet-button {
+                background-color: rgb(124, 7, 46);
+                color:rgb(255, 254, 181);
+                padding:10px;
+                border-radius: 10px;
+                border:thin solid rgb(255, 254, 181);
+                display: grid;
+                width: 100px;
+                text-align: center;
+                cursor: pointer;
+            }
+            .new-round-button {
+                background-color:rgb(0, 75, 0);
+                color:rgb(255, 254, 181);
+                padding:10px;
+                border-radius: 10px;
+                border:thin solid rgb(255, 254, 181);
+                display: grid;
+                width: 100px;
+                text-align: center;
+                font-family: Tahoma;
+                cursor: pointer;
+            }
+
+            .instructions {
+                background-color:rgb(0, 46, 0);
+                color:yellowgreen;
+                font-family: tahoma;
+                padding-left:20px;
+                padding-right:20px;
+                padding-bottom: 15px;
+            }
+            h1 {
+                color:white;
+            }
+            h2 {
+                color:silver;
+                font-size:20px;
+            }
+
+            .end-game {
+                display: grid;
+                grid-template-columns: (2, 1fr);
+                font-family: Tahoma;
+                font-size: 20px;
+                padding-top: 10px;
+                color:rgb(255, 254, 181);
+                background-color: rgb(255, 75, 75);
+                text-align: center;
+            }
+            .hidden {
+                visibility: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="instructions">
+        <h1>Blackjack</h1>
+        <p>Here are the rules of the game:
+            <br>1: The way to win is to get closer to a card sum of 21 than the dealer. If you surpass 21, you lose.
+            <br>2: Ace = 1, Jack 11, Queen = 12, King = 13
+            <br>3: First, you will place a bet. You start with 100 chips. If you win a round, you get the number of chips you bet x2
+            <br>4: If you lose, you lose the number of chips you bet.
+            <br>5: Two cards will be drawn for you and the dealer. You may end the round at this point if you wish. If you 'hit,' you will be dealt another card to get your sum closer to 21.
+            <br>6: If either player has a sum of 21 or greater, the round automatically ends. Remember: a sum greater than 21 results in a loss. Play smart out there kiddo.
+        </p>
+        <h2>Ready to lose your chips?</h2>
+        <div class="button" onclick="letsPlay()">You bet</div>
+        <div class="bet-area hidden" id="bet-area">
+            <div class="bet-button" onclick="bet(10)">Bet 10 Chips</div>
+            <div class="bet-button" onclick="bet(20)">Bet 20 Chips</div>
+            <div class="bet-button" onclick="bet(50)">Bet 50 Chips</div>
+            <div class="chips-text">Chips betting: <span id="chips-bet"></span></div>
+            <div class="chips-text">Chips remaining: <span id="chips-left"></span></div>
+        </div>
+
+        </div>
+        <div class="game-area">
+            <div class="character">
+                <div class="title">Player</div>
+                <div class="card-area">
+                    <div class="card" id="player-0"></div>
+                    <div class="card" id="player-1"></div>
+                    <div class="card" id="player-2"></div>
+                </div>
+            </div>
+            <div class="character">
+                <div class="title">Dealer</div>
+                <div class="card-area">
+                    <div class="card" id="dealer-0"></div>
+                    <div class="card" id="dealer-1"></div>
+                </div>
+            </div>
+        </div>
+        <div class="hit-area">
+            <div class="hit-button hidden" id="hit-button" onclick="hit()">Hit</div>
+            <div class="new-round-button hidden" id="new-round-button" onclick="endRound()">End Round</div>
+        </div>
+        <div class="end-game hidden" id="end-game">
+        </div>
+    </body>
+    <script>
+        var deck
+        var dealerCards
+        var playerCards
+        var cards
+        var chipsWagered = 0
+        var chipsBetEle = document.getElementById("chips-bet")
+        var chipsRemainingEle = document.getElementById("chips-left")
+        var endGameEle = document.getElementById("end-game")
+        var hitButtonEle = document.getElementById("hit-button")
+        var newRoundEle = document.getElementById("new-round-button")
+    
+        var displayCards = () => {
+
+            var dealerCard0 = dealerCards[0]
+            document.getElementById("dealer-0").innerHTML = getValueDisplay(dealerCard0.value) + " of " + dealerCard0.suit
+
+            var dealerCard1 = dealerCards[1]
+            document.getElementById("dealer-1").innerHTML = getValueDisplay(dealerCard1.value) + " of " + dealerCard1.suit
+
+            var playerCard0 = playerCards[0]
+            document.getElementById("player-0").innerHTML = getValueDisplay(playerCard0.value) + " of " + playerCard0.suit
+
+            var playerCard1 = playerCards[1]
+            document.getElementById("player-1").innerHTML = getValueDisplay(playerCard1.value) + " of " + playerCard1.suit
+
+        }
+
+        var optionHit = () => {
+            hitButtonEle.classList.toggle("hidden")
+            newRoundEle.classList.toggle("hidden")
+
+            var dealerTotal = 0
+            var playerTotal = 0
+
+            dealerCards.forEach((card) => {
+                dealerTotal = dealerTotal + card.value
+            })
+            playerCards.forEach((card) => {
+                playerTotal = playerTotal + card.value
+            })
+
+            if (playerTotal === 21 && dealerTotal === 21) {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " Oh wow! A tie! Here are your chips back."
+                setTimeout(tieRound,1000)
+            } else if (playerTotal === 21 || dealerTotal > 21) {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " You got lucky this time... you beat me " + playerTotal + " to " + dealerTotal + "."
+                setTimeout(wonRound,1000)
+            } else if (dealerTotal === 21 || playerTotal > 21) {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " You really suck at this. I beat you " + dealerTotal + " to " + playerTotal + "!"
+                setTimeout(lostRound,1000)
+            } else {
+            }
+        }
+
+        var hit = () => {
+            var card3 = deck.shift()
+            playerCards.push(card3)
+
+            var playerCard2 = playerCards[2]
+            document.getElementById("player-2").innerHTML = getValueDisplay(playerCard2.value) + " of " + playerCard2.suit
+
+            var playerTotal = 0
+            var dealerTotal = 0
+
+            playerCards.forEach((card) => {
+                playerTotal = playerTotal + card.value
+            })
+
+            dealerCards.forEach((card) => {
+                dealerTotal = dealerTotal + card.value
+            })
+
+            if (playerTotal === 21) {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " You got lucky this time... you beat me " + playerTotal + " to " + dealerTotal + "."
+                setTimeout(wonRound,1000)
+            } else if (playerTotal > 21) {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " You really suck at this. I beat you " + dealerTotal + " to " + playerTotal + "!"
+                setTimeout(lostRound,1000)
+            } else if (playerTotal > dealerTotal) {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " You got lucky this time... you beat me " + playerTotal + " to " + dealerTotal + "."
+                setTimeout(wonRound,1000)
+            } else {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " You really suck at this. I beat you " + dealerTotal + " to " + playerTotal + "!"
+                setTimeout(lostRound,1000)
+            }
+        }
+
+        var wonRound = () => {
+            chipsRemainingEle.innerHTML = Number(chipsRemainingEle.innerHTML) + Number(chipsWagered) + Number(chipsWagered)
+            chipsBetEle.innerHTML = 0
+            hitButtonEle.classList.toggle("hidden")
+            newRoundEle.classList.toggle("hidden")
+            endGameEle.classList.toggle("hidden")
+            cardBlank()
+            alert("Select bet amount to begin next round")
+        }
+
+        var lostRound = () => {
+            chipsBetEle.innerHTML = 0
+            hitButtonEle.classList.toggle("hidden")
+            newRoundEle.classList.toggle("hidden")
+            endGameEle.classList.toggle("hidden")
+            cardBlank()
+            alert("Select bet amount to begin next round")
+        }
+
+        var tieRound = () => {
+            chipsBetEle.innerHTML = 0
+            chipsRemainingEle.innerHTML = Number(chipsRemainingEle.innerHTML) + Number(chipsWagered)
+            hitButtonEle.classList.toggle("hidden")
+            newRoundEle.classList.toggle("hidden")
+            endGameEle.classList.toggle("hidden")
+            cardBlank()
+            alert("Select bet amount to begin next round")
+        } 
+        
+        var cardBlank = () => {
+            document.getElementById("player-0").innerHTML = " "
+            document.getElementById("player-1").innerHTML = " "
+            document.getElementById("player-2").innerHTML = " "
+            document.getElementById("dealer-0").innerHTML = " "
+            document.getElementById("dealer-1").innerHTML = " "
+        }
+
+        var endRound = () => {
+            var dealerTotal = 0
+            var playerTotal = 0
+
+            dealerCards.forEach((card) => {
+                dealerTotal = dealerTotal + card.value
+            })
+            playerCards.forEach((card) => {
+                playerTotal = playerTotal + card.value
+            })
+
+            if (playerTotal = dealerTotal) {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " Oh wow! A tie! Here are your chips back."
+                setTimeout(tieRound,1000)
+            } else if (playerTotal > dealerTotal) {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " You got lucky this time... you beat me " + playerTotal + " to " + dealerTotal + "."
+                setTimeout(wonRound,1000)
+            } else {
+                endGameEle.classList.toggle("hidden")
+                endGameEle.innerHTML = " You really suck at this. I beat you " + dealerTotal + " to " + playerTotal + "!"
+                setTimeout(lostRound,1000) 
+            }
+        }
+
+        var buildDeck = () => {
+            newDeck = []
+            var suits = ['Hearts', 'Spades', 'Clubs', 'Diamonds']
+            var values = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+
+            suits.forEach((suit) => {
+                
+                values.forEach((value) => {
+                    
+                    var card = {
+                        suit: suit,
+                        value: value,
+                        display: getValueDisplay(value),
+                    }
+                    newDeck.push(card)
+                })
+            })
+            return newDeck
+        }
+        
+        var getValueDisplay = (value) => {
+            if (value === 1) {
+                return "Ace"
+            } else if (value === 11) {
+                return "Jack"
+            } else if (value === 12) {
+                return "Queen"
+            } else if (value === 13) {
+                return "King"
+            } else {
+                return value
+            }
+        }
+
+        var shuffle = (deck) => {
+            var sortFunc = (card1, card2) => {
+                var result
+                if (Math.random() > .5) {
+                    result = 1
+                } else {
+                    result = -1
+                }
+                return result
+                
+            }
+            deck.sort(sortFunc)
+            return deck
+        }
+
+        var startGame = () => {
+            var newDeck = buildDeck()
+            var shuffledNewDeck = shuffle(newDeck)
+            deck = shuffledNewDeck
+
+            dealerCards = get2Cards()
+            playerCards = get2Cards()
+            displayCards()
+            optionHit()
+        }
+
+        var get2Cards = () => {
+            var card1 = deck.shift()
+            var card2 = deck.shift()
+            var cards = [card1, card2]
+            return cards
+        }
+
+        var letsPlay = () => {
+            chipsRemainingEle.innerHTML = 100
+            chipsBetEle.innerHTML = 0
+            document.getElementById("bet-area").classList.toggle("hidden")
+        }
+        
+        var bet = (num) => {
+            if (Number(chipsRemainingEle.innerHTML) <= 0) {
+                alert("You are broke and drunk. Go home.")
+            } else {
+            chipsRemainingEle.innerHTML = chipsRemainingEle.innerHTML - num
+            chipsBetEle.innerHTML = num
+            chipsWagered = Number(num)
+            startGame()
+            }
+        }
+
+    </script>
+</html>
