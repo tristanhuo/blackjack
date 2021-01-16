@@ -144,7 +144,7 @@
         <h1>Blackjack</h1>
         <p>Here are the rules of the game:
             <br>1: The way to win is to get closer to a card sum of 21 than the dealer. If you surpass 21, you lose.
-            <br>2: Ace = 1, Jack 11, Queen = 12, King = 13
+            <br>2: Ace = 1, Jack = 11, Queen = 12, King = 13
             <br>3: First, you will place a bet. You start with 100 chips. If you win a round, you get the number of chips you bet x2
             <br>4: If you lose, you lose the number of chips you bet.
             <br>5: Two cards will be drawn for you and the dealer. You may end the round at this point if you wish. If you 'hit,' you will be dealt another card to get your sum closer to 21.
@@ -328,7 +328,7 @@
                 playerTotal = playerTotal + card.value
             })
 
-            if (playerTotal = dealerTotal) {
+            if (playerTotal === dealerTotal) {
                 endGameEle.classList.toggle("hidden")
                 endGameEle.innerHTML = " Oh wow! A tie! Here are your chips back."
                 setTimeout(tieRound,1000)
